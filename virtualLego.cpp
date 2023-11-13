@@ -608,6 +608,16 @@ LRESULT CALLBACK d3d::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				g_BulletBall.setPower(0, 2.0f);
 			}
 			break;
+		case VK_LEFT:
+			if (g_ControlBall.getCenter().x > l_limit && (!pause && !game_over)) {
+				g_ControlBall.setCenter(g_ControlBall.getCenter().x - 0.1f, g_ControlBall.getCenter().y, g_ControlBall.getCenter().z);
+			}
+			break;
+		case VK_RIGHT:
+			if (g_ControlBall.getCenter().x < r_limit && (!pause && !game_over)) {
+				g_ControlBall.setCenter(g_ControlBall.getCenter().x + 0.1f, g_ControlBall.getCenter().y, g_ControlBall.getCenter().z);
+			}
+			break;
 		//restart the game when you pressed 'r'
 		case 0x52:
 			if (game_over) {
