@@ -23,8 +23,6 @@ IDirect3DDevice9* Device = NULL;
 const int Width  = 1080;
 const int Height = 760;
 
-int score = 0;
-
 // There are 39 balls
 const int NUM_BALLS = 39;
 //pressed space
@@ -135,7 +133,6 @@ public:
 
 			if (!is_control_ball) {
 				this->setCenter(999.0f, 999.0f, -999.0f);
-				score++;
 			}
 
 		}
