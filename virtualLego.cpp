@@ -611,7 +611,6 @@ LRESULT CALLBACK d3d::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		//restart the game when you pressed 'r'
 		case 0x52:
 			if (game_over) {
-				score = 0;
 				game_over = false;
 				pressed_space = false;
 				for (int i = 0; i < NUM_BALLS; i++) {
