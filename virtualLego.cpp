@@ -31,7 +31,7 @@ const int NUM_BALLS = 39;
 bool pressed_space = false;
 //pause flag
 bool pause = false;
-//power를 저장하기 위한 변수
+//Variable for Save the velocity of bullet ball
 double temp_x, temp_z;
 // initialize the position (coordinate) of each ball (ball0 ~ ball39)
 const float spherePos[NUM_BALLS][2] = {{-2.9f,1.7},{-2.4f,1.7},{-1.9f,1.7}, {-3.3f,1.3},{-3.3f,0.7},{-3.3f,0.2},{-3.3f,-0.3}, {-1.5f,1.3},{-1.5f,0.7},{-1.5f,0.2},{-1.5f,-0.3}, {-2.9f,-0.7},{-2.4f,-0.7},{-1.9f,-0.7},
@@ -584,82 +584,80 @@ LRESULT CALLBACK d3d::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     static enum { WORLD_MOVE, LIGHT_MOVE, BLOCK_MOVE } move = WORLD_MOVE;
 	static float l_limit = -3.86f;
 	static float r_limit = 3.86f;
-	
-	switch( msg ) {
+
+	switch (msg) {
 	case WM_DESTROY:
-        {
-			::PostQuitMessage(0);
-			break;
-        }
+	{
+		::PostQuitMessage(0);
+		break;
+	}
 	case WM_KEYDOWN:
-        {
-			
-            switch (wParam) {
-            case VK_ESCAPE:
-				::DestroyWindow(hwnd);
-                break;
-            case VK_RETURN:
-                if (NULL != Device) {
-                    wire = !wire;
-                    Device->SetRenderState(D3DRS_FILLMODE,
-                        (wire ? D3DFILL_WIREFRAME : D3DFILL_SOLID));
-                }
-                break;
-            case VK_SPACE:
-				if (!pressed_space) {
-					pressed_space = true;
-					g_BulletBall.setPower(0, 2.0f);
-				}
-                break;
-			//R키를 누르면 게임을 재시작하게.
-			case 0x52:
-				if (game_over) {
-					score = 0;
-					game_over = false;
-					pressed_space = false;
-					for (int i = 0; i < NUM_BALLS; i++) {
-						g_sphere[i].setCenter(spherePos[i][0], (float)M_RADIUS, spherePos[i][1]);
-						g_sphere[i].setPower(0, 0);
-					}
-					g_ControlBall.setCenter(0.0f, (float)M_RADIUS, -3.0f);
-					g_BulletBall.setCenter(0.0f, (float)M_RADIUS, -3.21f + 2 * M_RADIUS);
-					g_BulletBall.setPower(0, 0);
-				}
-				break;
-			//p키를 누르면 게임을 일시정지하게.
-			case 0x50:
-				if (!game_over) {
-					pause = !pause;
-					if (pause) {
-						temp_x = g_BulletBall.getVelocity_X();
-						temp_z = g_BulletBall.getVelocity_Z();
-						g_BulletBall.setPower(0, 0);
-					}
-					else {
-						g_BulletBall.setPower(temp_x, temp_z);
-					}
-				}
-				break;
-			default:
-				break;
+	{
+
+		switch (wParam) {
+		case VK_ESCAPE:
+			::DestroyWindow(hwnd);
+			break;
+		case VK_RETURN:
+			if (NULL != Device) {
+				wire = !wire;
+				Device->SetRenderState(D3DRS_FILLMODE,
+					(wire ? D3DFILL_WIREFRAME : D3DFILL_SOLID));
 			}
 			break;
-        }
+		case VK_SPACE:
+			if (!pressed_space) {
+				pressed_space = true;
+				g_BulletBall.setPower(0, 2.0f);
+			}
+			break;
+		//restart the game when you pressed 'r'
+		case 0x52:
+			if (game_over) {
+				score = 0;
+				game_over = false;
+				pressed_space = false;
+				for (int i = 0; i < NUM_BALLS; i++) {
+					g_sphere[i].setCenter(spherePos[i][0], (float)M_RADIUS, spherePos[i][1]);
+					g_sphere[i].setPower(0, 0);
+				}
+				g_ControlBall.setCenter(0.0f, (float)M_RADIUS, -3.0f);
+				g_BulletBall.setCenter(0.0f, (float)M_RADIUS, -3.21f + 2 * M_RADIUS);
+				g_BulletBall.setPower(0, 0);
+			}
+			break;
+		//pause the game when you pressed 'p'
+		case 0x50:
+			if (!game_over) {
+				pause = !pause;
+				if (pause) {
+					temp_x = g_BulletBall.getVelocity_X();
+					temp_z = g_BulletBall.getVelocity_Z();
+					g_BulletBall.setPower(0, 0);
+				}
+				else {
+					g_BulletBall.setPower(temp_x, temp_z);
+				}
+			}
+			break;
+		default:
+			break;
+		}
+		break;
+	}
 	case WM_MOUSEMOVE:
-        {
-            //마우스가 따라가는 곳으로 ControlBall이 이동하게끔
-			int x = LOWORD(lParam);
-			int y = HIWORD(lParam);
-			//LOWORD의 이동만 따라감
-			float normalizedX = static_cast<float>(x) / static_cast<float>(Width) * 2.0f - 1.0f;
-			g_ControlBall.setCenter(normalizedX * 3.8f, g_ControlBall.getCenter().y, g_ControlBall.getCenter().z);
+	{
+		//마우스가 따라가는 곳으로 ControlBall이 이동하게끔
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		//LOWORD의 이동만 따라감
+		float normalizedX = static_cast<float>(x) / static_cast<float>(Width) * 2.0f - 1.0f;
+		if(!pause && !game_over)g_ControlBall.setCenter(normalizedX * 3.8f, g_ControlBall.getCenter().y, g_ControlBall.getCenter().z);
 
-            break;
-        }
+		break;
+	}
 
 	}
-	
-	
 	return ::DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
