@@ -6,7 +6,7 @@ Chung-Ang Univ. Objected-Oriented Programming Project3 - Graphics Game 'ARKANOID
 Test Environment
 ----------------
 OS : Windows 11   
-Complier : MSVC 
+Complier : MSVC   
 IDE : Visual Studio 2022
 
 How to run
