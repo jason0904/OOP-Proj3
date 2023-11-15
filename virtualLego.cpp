@@ -658,8 +658,11 @@ LRESULT CALLBACK d3d::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		int y = HIWORD(lParam);
 		//LOWORD의 이동만 따라감
 		float normalizedX = static_cast<float>(x) / static_cast<float>(Width) * 2.0f - 1.0f;
-		if(!pause && !game_over)g_ControlBall.setCenter(normalizedX * 3.8f, g_ControlBall.getCenter().y, g_ControlBall.getCenter().z);
-
+		if (!pause && !game_over) {
+			if (normalizedX > l_limit && normalizedX < r_limit) {
+				g_ControlBall.setCenter(normalizedX * 3.8f, g_ControlBall.getCenter().y, g_ControlBall.getCenter().z);
+			}
+		}
 		break;
 	}
 
